@@ -142,6 +142,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   border-top:1px solid var(--line);border-bottom:1px solid var(--line);
   margin-left:calc(-1 * var(--pad));margin-right:calc(-1 * var(--pad))}
 .strip-track{display:flex;width:max-content;will-change:transform}
+.strip-cell.big{width:clamp(250px,30vw,430px)}
+.strip-cell.big img{filter:grayscale(.15) contrast(1.05) brightness(.92)}
 .strip-cell{width:clamp(190px,23vw,330px);aspect-ratio:16/9;flex:none;
   border-right:1px solid var(--line);overflow:hidden;position:relative}
 .strip-cell img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1) brightness(.72);
@@ -273,8 +275,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .footer-cta .small{font-family:var(--font-mono);font-size:.65rem;letter-spacing:.3em;
   text-transform:uppercase;color:var(--dim);margin-bottom:1.6rem}
 .footer-mail{display:inline-block;font-weight:800;font-stretch:72%;text-transform:uppercase;
-  font-size:clamp(1.9rem,7.4vw,7.2rem);line-height:.95;letter-spacing:-.025em;
-  position:relative;word-break:break-all}
+  font-size:clamp(1.4rem,3.4vw,3.2rem);line-height:.95;letter-spacing:-.02em;
+  position:relative;word-break:break-word}
 .footer-mail::after{content:"";position:absolute;left:0;bottom:-6px;height:3px;width:100%;
   background:var(--accent);transform:scaleX(0);transform-origin:right;
   transition:transform .5s cubic-bezier(.65,0,.35,1)}
@@ -624,13 +626,25 @@ VAULT.forEach(group=>{
 });
 document.getElementById('vaultCount').textContent=String(vaultTotal).padStart(2,'0');
 
-/* filmstrip: two copies for seamless loop */
-const stripIds = ["V8N1J3-6QNg","YmsVnxeIzVA","HqLsTppbrX8","_hs5cdzkhpw","-sn5pVRslFI","FIiiMVvSGjw","Z91-sboVVbQ","XjPSGuJskxM","s95nd960XsY","BHalO1H_Bvc"];
+/* filmstrip: two copies for seamless loop. big = featured artists */
+const gthumb = id => `https://drive.google.com/thumbnail?id=${id}&sz=w640`;
+const stripImgs = [
+  {src:thumb("_hs5cdzkhpw"), big:true},                          // Taylor Swift — first
+  {src:thumb("V8N1J3-6QNg"), big:true},                          // The 1975
+  {src:gthumb("1lVROWHrGS-GrFvSo8R4gYrIEW6GtVUcU"), big:true},   // Blackpink
+  {src:gthumb("1_FzNwhSV-vXmUshjrTHN85f-QMaYd9k7"), big:true},   // Insurgent (Divergent Series)
+  {src:gthumb("11X1tYkHXkVcIIr4thHY8DUPEBDgLltxG"), big:true},   // Bad Bunny
+  {src:thumb("YmsVnxeIzVA")},                                    // Koffee
+  {src:thumb("HqLsTppbrX8")},                                    // Nathy Peluso
+  {src:thumb("Z91-sboVVbQ")},                                    // Jorja Smith
+  {src:thumb("FIiiMVvSGjw")},                                    // Pop Smoke
+  {src:thumb("XjPSGuJskxM")},                                    // Barry Lyndon
+];
 const stripTrack = document.getElementById('stripTrack');
-[...stripIds,...stripIds].forEach(id=>{
+[...stripImgs,...stripImgs].forEach(o=>{
   const d=document.createElement('div');
-  d.className='strip-cell';
-  d.innerHTML=`<img loading="lazy" alt="" src="${thumb(id)}">`;
+  d.className='strip-cell'+(o.big?' big':'');
+  d.innerHTML=`<img loading="lazy" alt="" src="${o.src}">`;
   stripTrack.appendChild(d);
 });
 
